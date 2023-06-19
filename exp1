@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char message[100], encrypted[100], decrypted[100];
+    int i, key, choice, len;
+
+    printf("Enter a message: ");
+    fgets(message, 100, stdin);
+    len = strlen(message);
+
+    printf("Enter a key (1-25): ");
+    scanf("%d", &key);
+
+    for (i = 0; i < len; i++)
+    {
+        if (message[i] >= 'a' && message[i] <= 'z')
+        {
+            encrypted[i] = (message[i] - 'a' + key) % 26 + 'a';
+        }
+        else if (message[i] >= 'A' && message[i] <= 'Z')
+        {
+            encrypted[i] = (message[i] - 'A' + key) % 26 + 'A';
+        }
+        else
+        {
+            encrypted[i] = message[i];
+        }
+    }
+    encrypted[i] = '\0';
+
+    printf("Encrypted message: %s\n", encrypted);
+
+
+    for (i = 0; i < len; i++)
+    {
+        if (encrypted[i] >= 'a' && encrypted[i] <= 'z')
+        {
+            decrypted[i] = (encrypted[i] - 'a' - key + 26) % 26 + 'a';
+        }
+        else if (encrypted[i] >= 'A' && encrypted[i] <= 'Z')
+        {
+            decrypted[i] = (encrypted[i] - 'A' - key + 26) % 26 + 'A';
+        }
+        else
+        {
+            decrypted[i] = encrypted[i];
+        }
+    }
+    decrypted[i] = '\0';
+
+    printf("Decrypted message: %s\n", decrypted);
+
+    return 0;
+}

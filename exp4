@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_LEN 1000
+#define ALPHA_LEN 26
+
+int main() {
+    char plaintext[MAX_LEN], ciphertext[MAX_LEN], key[MAX_LEN];
+    int key_len, plaintext_len, i, j, k;
+
+    
+    printf("Enter the plaintext: ");
+    fgets(plaintext, MAX_LEN, stdin);
+    printf("Enter the key: ");
+    fgets(key, MAX_LEN, stdin);
+
+   
+    plaintext_len = strlen(plaintext) - 1;
+    plaintext[plaintext_len] = '\0';
+    key_len = strlen(key) - 1;
+    key[key_len] = '\0';
+
+    // Convert the key to uppercase
+    for (i = 0; i < key_len; i++) {
+        key[i] = toupper(key[i]);
+    }
+
+    
+    k = 0;
+    for (i = 0; i < plaintext_len; i++) {
+        
+        if (!isalpha(plaintext[i])) {
+            ciphertext[i] = plaintext[i];
+            continue;
+        }
+
+        
+        int shift = key[k] - 'A';
+
+        
+        if (islower(plaintext[i])) {
+            ciphertext[i] = 'a' + ((plaintext[i] - 'a' + shift) % ALPHA_LEN);
+        } else {
+            ciphertext[i] = 'A' + ((plaintext[i] - 'A' + shift) % ALPHA_LEN);
+        }
+
+        
+        k = (k + 1) % key_len;
+    }
+
+  
+    printf("The ciphertext is: %s\n", ciphertext);
+
+    return 0;
+}
+
+
+
+OUTPUT
+Enter the plaintext: krithik
+Enter the key: secret
+The ciphertext is: cvkklbc

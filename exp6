@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main() {
+    int freq[26] = {0};
+    char c;
+    int n = 0;
+
+    // read the ciphertext and calculate frequency distribution
+    while ((c = getchar()) != EOF) {
+        if (c >= 'A' && c <= 'Z') {
+            freq[c - 'A']++;
+            n++;
+        }
+    }
+
+    // find the most frequent and second most frequent letters
+    int max_i = 0, second_max_i = 0;
+    for (int i = 1; i < 26; i++) {
+        if (freq[i] > freq[max_i]) {
+            second_max_i = max_i;
+            max_i = i;
+        } else if (freq[i] > freq[second_max_i]) {
+            second_max_i = i;
+        }
+    }
+
+    // make the substitutions and calculate the key parameters
+    int a = (second_max_i - max_i + 26) % 26;
+    int b = (max_i - 'E' + 26) % 26;
+
+    // print the results
+    printf("Key parameters: a = %d, b = %d\n", a, b);
+
+    return 0;
+}
+output
+
+Key parameters: a = 7, b = 1
