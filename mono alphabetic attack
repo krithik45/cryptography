@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define ALPHABET_SIZE 26
+
+void calculateLetterFrequency(char* text, int* frequency) {
+    int i;
+    for (i = 0; i < strlen(text); i++) {
+        if (isalpha(text[i])) {
+            frequency[tolower(text[i]) - 'a']++;
+        }
+    }
+}
+
+int findMostFrequentLetter(int* frequency) {
+    int i, maxIndex = 0;
+    for (i = 1; i < ALPHABET_SIZE; i++) {
+        if (frequency[i] > frequency[maxIndex]) {
+            maxIndex = i;
+        }
+    }
+    return maxIndex;
+}
+
+void decryptText(char* text, char* key) {
+    int i;
+    for (i = 0; i < strlen(text); i++) {
+        if (isalpha(text[i])) {
+            if (isupper(text[i])) {
+                text[i] = toupper(key[text[i] - 'A']);
+            } else {
+                text[i] = tolower(key[text[i] - 'a']);
+            }
+        }
+    }
+}
+
+int main() {
+    char ciphertext[1000], plaintext[1000], key[ALPHABET_SIZE + 1], tempKey[ALPHABET_SIZE + 1];
+    int frequency[ALPHABET_SIZE], i, j, k, temp, maxIndex;
+
+    printf("Enter the ciphertext: ");
+    fgets(ciphertext, 1000, stdin);
+    ciphertext[strlen(ciphertext) - 1] = '\0';
+
+    memset(frequency, 0, sizeof(frequency));
+
+    calculateLetterFrequency(ciphertext, frequency);
+
+    printf("Letter frequency in the ciphertext:\n");
+    for (i = 0; i < ALPHABET_SIZE; i++) {
+        printf("%c: %d\n", 'a' + i, frequency[i]);
+    }
+
+    strcpy(key, "abcdefghijklmnopqrstuvwxyz");
+    for (i = 0; i < ALPHABET_SIZE - 1; i++) {
+        maxIndex = findMostFrequentLetter(frequency);
+        temp = frequency[maxIndex];
+        frequency[maxIndex] = 0;
+        for (j = i + 1; j < ALPHABET_SIZE; j++) {
+            maxIndex = findMostFrequentLetter(frequency);
+            frequency[maxIndex] = 0;
+           
+            temp = key[j];
+            key[j] = key[maxIndex];
+            key[maxIndex] = temp;
+            decryptText(ciphertext, key);
+            printf("Possible plaintext %d:\n%s\n", i+1, ciphertext);
+           
+            temp = key[j];
+            key[j] = key[maxIndex];
+            key[maxIndex] = temp;
+            frequency[maxIndex] = temp;
+        }
+        frequency[maxIndex] = temp;
+    }
+
+    return 0;
+}

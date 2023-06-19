@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int main() {
+    char ciphertext[] = "BUQKKRTAJWSAJWKSYWTJT";
+    int freq[26] = {0};
+    int i;
+    for (i = 0; ciphertext[i] != '\0'; i++) {
+        freq[ciphertext[i] - 'A']++;
+    }
+    int e = 0, t = 0;
+    for (i = 0; i < 26; i++) {
+        if (freq[i] > freq[e]) {
+            t = e;
+            e = i;
+        } else if (freq[i] > freq[t]) {
+            t = i;
+        }
+    }
+    int a = (e - t + 26) % 26;
+    int b = (ciphertext[0] - 'A' - a * 4 + 26) % 26;
+    printf("a = %d, b = %d\n", a, b);
+    printf("Plaintext: ");
+    for (i = 0; ciphertext[i] != '\0'; i++) {
+        int c = ciphertext[i] - 'A';
+        int p = (a * (c - b + 26) % 26);
+        printf("%c", 'A' + p);
+    }
+    printf("\n");
+    return 0;
+}
+
